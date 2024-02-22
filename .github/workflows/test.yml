@@ -3,7 +3,7 @@ name: Publish to GitHub Pages
 on:
   push:
     branches:
-      - pages
+      - main  # Modify this to match your repository's default branch
 
 jobs:
   deploy:
@@ -15,18 +15,19 @@ jobs:
         
       - name: Copy files to deployment directory
         run: |
-          echo "aa" > .publish/a.txt
-          echo "bb" > .publish/b.txt
-          echo "cc" > .publish/c.txt
+          cp index.html dist/index.html
+          cp a.zip dist/a.zip
+          cp b.zip dist/b.zip
+          cp c.zip dist/c.zip
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./.publish
-  
+          publish_dir: ./dist
+          
   permissions:
-  contents: # Ensure this workflow can modify contents of the repository
-    paths:
-      - dist
-    permissions: write
+    contents: # Ensure this workflow can modify contents of the repository
+      paths:
+        - dist
+      permissions: write
