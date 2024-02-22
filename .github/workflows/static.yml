@@ -1,28 +1,208 @@
-# Simple workflow for deploying static content to GitHub Pages
-name: Deploy static content to Pages
+# determine release version
+  # Could increment x.1.x -> x.2.x
+    # Or x.x.1 -> x.x.2
+  # Could get release version from package.json
+
+
+# Create new release with tag
+
+### Top must happen in order, below can be concurrent
+
+# Build linux binaries and upload to relase
+# Build windows binaries and upload to relase
+# Build mac binaries and upload to relase
+
+name: Create new release
 
 on:
-  # Runs on pushes targeting the default branch
   push:
-    branches: ["main"]
+    branches:
+      - main
 
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
-
-# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
   contents: read
   pages: write
   id-token: write
 
-# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
-# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
-concurrency:
-  group: "pages"
-  cancel-in-progress: false
-
 jobs:
-  # Single deploy job since we're just deploying
+
+  # test:
+  #   if: github.event.pull_request.merged == true
+  #   strategy:
+  #     matrix:
+  #       os: [ubuntu-latest, windows-latest, macos-latest]
+
+  #   runs-on: ${{ matrix.os }}
+
+  #   steps:
+  #   - name: Checkout Repository
+  #     uses: actions/checkout@v2
+
+  #   - name: Set Up Node.js
+  #     uses: actions/setup-node@v2
+  #     with:
+  #       node-version: '16'  
+
+  #   - name: Install Dependencies
+  #     run: npm install
+
+  #   - name: Build Electron Application
+  #     run: npm run make
+    
+  #   - name: Run Tests
+  #     run: npm test
+
+  # build:
+  #   if: github.event.pull_request.merged == true
+  #   runs-on: ubuntu-latest
+  #   needs: test
+
+  #   steps:
+  #     - name: Checkout Repository
+  #       uses: actions/checkout@v2
+
+  #     - name: Create Release
+  #       run: |
+  #         OLD_TAG=$(git fetch --tags 2>&1 | awk '/new tag/ {print $4}' | tail -n 1)
+  #         echo $OLD_TAG
+  #         NEW_TAG=$(echo "$OLD_TAG" | awk -F. '{$2++; print ""$1"."$2"."$3}')
+  #         echo $NEW_TAG
+  #         gh release create $NEW_TAG 
+
+  #       env:
+  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  
+  
+  # windows-build:
+  #   if: github.event.pull_request.merged == true
+  #   runs-on: windows-latest
+  #   needs: build
+
+  #   steps:
+  #   - name: Checkout Repository
+  #     uses: actions/checkout@v2
+
+  #   # - name: Set Up Node.js
+  #   #   uses: actions/setup-node@v2
+  #   #   with:
+  #   #     node-version: '16'  
+
+  #   # - name: Install Dependencies
+  #   #   run: npm install
+
+  #   # - name: Build Electron Application
+  #   #   run: npm run make
+
+  #   # - name: Package Distributable Binaries
+  #   #   run: |
+  #   #     npm run package
+  #   #     Compress-Archive -Path "out\music-box-interactive-desktop-win32-x64" -DestinationPath "music-box-interactive-desktop-win32-x64.zip"
+
+  #   # - name: Upload Distributable
+  #   #   run: |
+  #   #     git fetch --tags
+  #   #     $lastTag=git describe --tags $( git rev-list --tags --max-count=1)
+  #   #     gh release upload $lastTag "music-box-interactive-desktop-win32-x64.zip"
+  #   - name: Create File
+  #     run: |
+  #       echo >
+  #   - name: 'Upload Artifact'
+  #     uses: actions/upload-artifact@v4
+  #     with:
+  #       name: windows-artifact
+  #       path: music-box-interactive-desktop-win32-x64.zip
+  #       retention-days: 5
+
+
+  #     env:
+  #       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  linux-build:
+    runs-on: ubuntu-latest
+
+    steps:
+    # - name: Checkout Repository
+    #   uses: actions/checkout@v2
+
+    # - name: Set Up Node.js
+    #   uses: actions/setup-node@v2
+    #   with:
+    #     node-version: '16'  
+
+    # - name: Install Dependencies
+    #   run: npm install
+
+    # - name: Build Electron Application
+    #   run: npm run make
+
+    # - name: Package Distributable Binaries
+    #   run: |
+    #     npm run package
+    #     FOLDER_NAME="music-box-interactive-desktop-linux-x64"
+    #     zip -r "${FOLDER_NAME}.zip" "out/${FOLDER_NAME}"
+
+    # - name: Upload Distributable
+    #   run: |
+    #     TAG=$(git fetch --tags 2>&1 | awk '/new tag/ {print $4}' | tail -n 1)
+    #     gh release upload $TAG "music-box-interactive-desktop-linux-x64.zip"
+    - name: Create file 
+      run: |
+        echo "" > music-box-interactive-desktop-linux-x64.zip
+    - name: 'Upload Artifact'
+      uses: actions/upload-artifact@v4
+      with:
+        name: linux-artifact
+        path: music-box-interactive-desktop-linux-x64.zip
+        retention-days: 5
+
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  macos-build:
+    runs-on: macos-latest
+
+    steps:
+    # - name: Checkout Repository
+    #   uses: actions/checkout@v2
+
+    # - name: Set Up Node.js
+    #   uses: actions/setup-node@v2
+    #   with:
+    #     node-version: '16'  
+
+    # - name: Install Dependencies
+    #   run: npm install
+
+    # - name: Build Electron Application
+    #   run: npm run make
+
+    # - name: Package Distributable Binaries
+    #   run: |
+    #     npm run package
+    #     FOLDER_NAME="music-box-interactive-desktop-darwin-x64"
+    #     echo FOLDER_NAME
+    #     zip -r "${FOLDER_NAME}.zip" "out/${FOLDER_NAME}"
+
+    # - name: Create GitHub Release
+    #   run: |
+    #     TAG=$(git fetch --tags 2>&1 | awk '/new tag/ {print $4}' | tail -n 1)
+    #     gh release upload $TAG "music-box-interactive-desktop-darwin-x64.zip" 
+
+    - name: Create File
+      run: |
+        echo "" > music-box-interactive-desktop-darwin-x64.zip
+
+    - name: 'Upload Artifact'
+        uses: actions/upload-artifact@v4
+        with:
+          name: mac-artifact
+          path: music-box-interactive-desktop-darwin-x64.zip
+          retention-days: 5
+
+
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    
   deploy:
     environment:
       name: github-pages
@@ -31,11 +211,23 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Add files
+      - name: Download Linux artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: linux-artifact
+      - name: Download Windows artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: windows-artifact
+      - name: Download Mac artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: mac-artifact
+      - name: Move Binaries
         run: |
-          echo "aa" > public/a.txt
-          echo "bb" > public/b.txt
-          echo "cc" > public/c.txt
+          mv music-box-interactive-desktop-linux-x64.zip public
+          mv music-box-interactive-desktop-windows-x64.zip public
+          mv music-box-interactive-desktop-darwin-x64.zip public
       - name: Setup Pages
         uses: actions/configure-pages@v4
       - name: Upload artifact
@@ -46,3 +238,5 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+    
+
