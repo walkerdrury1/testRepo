@@ -146,8 +146,8 @@ jobs:
     #     TAG=$(git fetch --tags 2>&1 | awk '/new tag/ {print $4}' | tail -n 1)
     #     gh release upload $TAG "music-box-interactive-desktop-linux-x64.zip"
     - name: Create file 
-      run: |
-        echo "" > music-box-interactive-desktop-linux-x64.zip
+      run: echo "" > music-box-interactive-desktop-linux-x64.zip
+      
     - name: 'Upload Artifact'
       uses: actions/upload-artifact@v4
       with:
@@ -189,8 +189,7 @@ jobs:
     #     gh release upload $TAG "music-box-interactive-desktop-darwin-x64.zip" 
 
     - name: Create File
-      run: |
-        echo "" > music-box-interactive-desktop-darwin-x64.zip
+      run: echo "" > music-box-interactive-desktop-darwin-x64.zip
 
     - name: 'Upload Artifact'
         uses: actions/upload-artifact@v4
