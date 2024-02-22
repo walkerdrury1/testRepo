@@ -215,10 +215,6 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: linux-artifact
-      - name: Download Windows artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: windows-artifact
       - name: Download Mac artifact
         uses: actions/download-artifact@v4
         with:
@@ -226,7 +222,6 @@ jobs:
       - name: Move Binaries
         run: |
           mv music-box-interactive-desktop-linux-x64.zip public
-          mv music-box-interactive-desktop-windows-x64.zip public
           mv music-box-interactive-desktop-darwin-x64.zip public
       - name: Setup Pages
         uses: actions/configure-pages@v4
