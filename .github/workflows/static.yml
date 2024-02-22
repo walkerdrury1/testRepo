@@ -31,6 +31,11 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Add files
+        run: |
+          echo "aa" > publish/a.txt
+          echo "bb" > publish/b.txt
+          echo "cc" > publish/c.txt
       - name: Setup Pages
         uses: actions/configure-pages@v4
       - name: Upload artifact
